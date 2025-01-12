@@ -7,19 +7,22 @@ import sendEmail from "../utils/sendEmail.js";
 const registerUser = async (req, res) => {
   try {
     const data = { ...req.body };
+    
+
     data.createdAt = new Date();
     data.role = USER_ROLES[data?.role ? data?.role : 3];
     const newUser = new User(data);
     await newUser.save();
     res.status(201).json({ success: true, message: "User Created Successfully" });
   } catch (e) {
-    res.status(500).json({ success: false, message: "Error Encountered!" });
+    res.status(501).json({ success: false, message: "Error Encountered!",e });
   }
 };
 
 const login = async (req, res) => {
   try {
     const data = req.body;
+    console.log('Email received:', data.email);
     const user = await User.findOne({ email: data.email });
     if (!user) {
       return res.status(404).json({ success: false, message: "User Not Found!" });
